@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Above is how we link our style sheet. url_for creates a url based on the static folder, and file name given -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+    <!-- Above is how we link our JS file. Make sure that you understand why we use defer -->
+    <title>The Wall</title>
+</head>
+<body>
+    <div class="h1">
+        <h1>Coding Dojo Wall</h1>
+        <div class="h2">
+            <h2>Welcome {{ session.first_name }}</h2>
+            <a href="user/logout">Logout</a>
+        </div>
+    </div>
+    <div>
+        <form action="/user/post" method="post" id="comment">
+            <input type="hidden" name="user_id" value="{{ session.user_id }}">
+            <label>What's on yourmind? Create a new post:
+                <textarea type="text" name="content" cols="40" rows="8"></textarea>
+            </label>
+            <input type="submit" id="make_post" value="Publish">
+            <div class="scroll">
+                {% for post in posts %}
+                    <input type="hidden" name="post_id" value="{{ post.id }}">
+                    <h4>{{ post.creator.first_name }} - {{ post.created_at }}</h4>
+                    <p>{{ post.content }}</p>
+                    {% if post.creator.id == session.user_id %}
+                        <p><a id="make_post" href="/user/post/delete/{{ post.id }}">Delete</a></p>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </form>
+    </div>
+</body>
+</html>
+
+<!-- Format for adding images -->
+<!-- <img src="{{ url_for('static', filename='images/img.png') }}"> -->
